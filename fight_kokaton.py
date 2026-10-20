@@ -171,7 +171,7 @@ class Explosion:
         爆発画像Surfaceを生成する
         引数 bomb : 爆発する爆弾のBombインスタンス
         """
-        img = pg.image.load(f"fig/explosion.png")
+        img = pg.image.load(f"fig/explosion.gif")
 
         #元画像と上下左右を反転させた画像をリストに格納
         self.imgs = [img, pg.transform.flip(img, True, True)]
@@ -180,7 +180,18 @@ class Explosion:
         self.rct = self.imgs[0].get_rect()
         self.rct.center = bomb.rct.center
 
-        self.life = 50 #
+        self.life = 50 #爆発を表示する時間
+
+    def update(self, screen: pg.Surface):
+        """
+        爆発画像を交互に切り替えて表示する
+        """
+        self.life -= 1 #爆発の残り時間を1減らす
+
+        if self.life > 0:
+            #5フレームごとに画像を切り替える
+            img = self.imgs[(self.life // 5) % 2]
+            screen.blit(img, self.rct) #爆発画像を描画
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -195,6 +206,7 @@ def main():
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beams = []  # 複数のビームを格納するリスト
     score = Score()
+    exps = [] #爆発インスタンスを格納する空リスト
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -217,11 +229,13 @@ def main():
                 time.sleep(1)
                 return
 
+        #ビームと爆弾の衝突判定
         for i, bomb in enumerate(bombs):
             if bomb is not None:
                 for j, beam in enumerate(beams): 
                     if beam is not None:
                         if beam.rct.colliderect(bomb.rct): #ビームと爆弾の衝突判定
+                            exps.append(Explosion(bomb)) #爆弾の位置に爆発を生成
                             beams[j] = None
                             bombs[i] = None
                             score.score += 1 #一点増やす
@@ -240,6 +254,13 @@ def main():
 
         # 画面外に出たビームをリストから取り除く
         beams = [beam for beam in beams if check_bound(beam.rct) == (True, True)]
+
+        #表示時間が残っている爆発だけをリストに残す
+        exps = [exp for exp in exps if exp.life > 0]
+        # 爆発画像を1つずつ更新・描画する
+        for exp in exps:
+            exp.update(screen)
+
 
         score.update(screen) #スコアを描画
 
