@@ -140,6 +140,7 @@ class Bomb:
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
 
+
 class Score:
     """
     スコアを表示するクラス
@@ -161,6 +162,7 @@ class Score:
         """
         self.img = self.fonto.render(f"Score: {self.score}", 0, self.color)
         screen.blit(self.img, self.rct)
+
 
 class Explosion:
     """
@@ -192,6 +194,7 @@ class Explosion:
             #5フレームごとに画像を切り替える
             img = self.imgs[(self.life // 5) % 2]
             screen.blit(img, self.rct) #爆発画像を描画
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -260,7 +263,6 @@ def main():
         # 爆発画像を1つずつ更新・描画する
         for exp in exps:
             exp.update(screen)
-
 
         score.update(screen) #スコアを描画
 
