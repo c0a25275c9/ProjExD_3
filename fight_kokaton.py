@@ -84,11 +84,11 @@ class Bird:
         screen.blit(self.img, self.rct)
 
 
-ビームクラス:
+class Beam:
     """
     こうかとんが放つビームに関するクラス
     """
-    def イニシャライザ(self, bird:"Bird"):
+    def __init__(self, bird:"Bird"):
         """
         ビーム画像Surfaceを生成する
         引数 bird：ビームを放つこうかとん（Birdインスタンス）
