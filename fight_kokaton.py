@@ -162,6 +162,26 @@ class Score:
         self.img = self.fonto.render(f"Score: {self.score}", 0, self.color)
         screen.blit(self.img, self.rct)
 
+class Explosion:
+    """
+    爆弾の爆発エフェクトに関するクラス
+    """
+    def __init__(self, bomb: "Bomb"):
+        """
+        爆発画像Surfaceを生成する
+        引数 bomb : 爆発する爆弾のBombインスタンス
+        """
+        img = pg.image.load(f"fig/explosion.png")
+
+        #元画像と上下左右を反転させた画像をリストに格納
+        self.imgs = [img, pg.transform.flip(img, True, True)]
+
+        #爆弾の中心座標に爆発画像を配置
+        self.rct = self.imgs[0].get_rect()
+        self.rct.center = bomb.rct.center
+
+        self.life = 50 #
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
